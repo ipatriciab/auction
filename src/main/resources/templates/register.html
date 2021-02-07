@@ -1,0 +1,107 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .mainContainer {
+            width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<!--This is my home page.
+&lt;!&ndash;crtol+shift+f9 - daca modificam ceva micut, pentru a a vedea fara repornirea server-ului&ndash;&gt;
+ceva adaugat tocmai acum-->
+<div class="mainContainer">
+
+    <form th:action="@{/register}" method="post" th:object="${userDto}">
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="form-outline">
+                    <input type="text" id="form3Example1" class="form-control" th:field="*{fisrtName}"/>
+                    <label class="form-label" for="form3Example1">First name</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-outline">
+                    <input type="text" id="form3Example2" class="form-control" th:field="*{lastName}"/>
+                    <label class="form-label" for="form3Example2">Last name</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            <input type="email" id="form3Example3" class="form-control" th:field="*{email}"/>
+            <label class="form-label" for="form3Example3">Email address</label>
+        </div>
+
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+            <input type="password" id="form3Example4" class="form-control" th:field="*{password}"/>
+            <label class="form-label" for="form3Example4">Password</label>
+        </div>
+
+        <!--
+                &lt;!&ndash; Checkbox &ndash;&gt;
+                <div class="form-check d-flex justify-content-center mb-4">
+                    <input
+                            class="form-check-input me-2"
+                            type="checkbox"
+                            value=""
+                            id="form2Example3"
+                            checked
+                    />
+                    <label class="form-check-label" for="form2Example3">
+                        Subscribe to our newsletter
+                    </label>
+                </div>
+        -->
+        <!-- admin/user radio buttons  -->
+        <div class="form-outline mb-4">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                      th:value="false" th:field="*{isAdmin}" >
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Auction participant
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked
+                       th:value="true" th:field="*{isAdmin}">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Auction administrator
+                </label>
+            </div>
+        </div>
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Sign up</button>
+
+        <!-- &lt;!&ndash; Register buttons &ndash;&gt;
+         <div class="text-center">
+             <p>or sign up with:</p>
+             <button type="button" class="btn btn-primary btn-floating mx-1">
+                 <i class="fab fa-facebook-f"></i>
+             </button>
+
+             <button type="button" class="btn btn-primary btn-floating mx-1">
+                 <i class="fab fa-google"></i>
+             </button>
+
+             <button type="button" class="btn btn-primary btn-floating mx-1">
+                 <i class="fab fa-twitter"></i>
+             </button>
+
+             <button type="button" class="btn btn-primary btn-floating mx-1">
+                 <i class="fab fa-github"></i>
+             </button>
+         </div>-->
+    </form>
+</div>
+</body>
+</html>
