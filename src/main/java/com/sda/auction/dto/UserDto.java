@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserDto {
     //    DTO - DATA TRANSFER OBJECT - ma ajuta sa imi transport datele din front in back
     // dar in baza salvam entitatea de user, nu userdto
-    private String fisrtName;
+    private String firstName;
     private String lastName;
     private String email;
     private String password;

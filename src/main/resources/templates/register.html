@@ -23,7 +23,7 @@ ceva adaugat tocmai acum-->
         <div class="row mb-4">
             <div class="col">
                 <div class="form-outline">
-                    <input type="text" id="form3Example1" class="form-control" th:field="*{fisrtName}"/>
+                    <input type="text" id="form3Example1" class="form-control" th:field="*{firstName}"/>
                     <label class="form-label" for="form3Example1">First name</label>
                 </div>
             </div>
@@ -39,6 +39,9 @@ ceva adaugat tocmai acum-->
         <div class="form-outline mb-4">
             <input type="email" id="form3Example3" class="form-control" th:field="*{email}"/>
             <label class="form-label" for="form3Example3">Email address</label>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('email')}"
+               th:text="${error}"></p>
         </div>
 
         <!-- Password input -->
