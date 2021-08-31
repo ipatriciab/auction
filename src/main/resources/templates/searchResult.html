@@ -1,0 +1,112 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" class="pageClass">
+<head>
+    <meta charset="UTF-8">
+    <title> Online auction Search Result </title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="/aroma-template/vendors/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/themify-icons/themify-icons.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/linericon/style.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/nice-select/nice-select.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="/aroma-template/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/jquery-3.3.1.slim.min.js">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/css/custom.css">
+
+</head>
+<body>
+<!--================ Start Header Menu Area =================-->
+<header class="header_area">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+
+                <a class="navbar-brand logo_h" href="index.html"><img th:src="@{images/OnlineAuction.jpg}" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
+
+                        <li class="nav-item active"><a class="nav-link" href="/home">Home</a></li>
+
+                        <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')"><a href="/myBids" class="nav-link">My
+                            Bids</a></li>
+
+                        <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a href="/addProduct" class="nav-link">Add
+                            Product</a></li>
+
+                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link"
+                                                                              href="/register">Register</a></li>
+
+                        <li class="nav-item">
+                            <form th:action="@{/search}" method="get">
+                                <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4 bar">
+                                    <div class="input-group">
+                                        <input type="search" placeholder="Search..." id="search" name="keyword"
+                                               autocomplete="off" aria-describedby="button-addon1"
+                                               class="form-control border-0 bg-light">
+                                        <div class="input-group-append">
+                                            <button id="button-addon1" type="submit" class="btn btn-link text-primary">
+                                                <i class="fa fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+
+                    <ul class="nav-shop" sec:authorize="isAuthenticated()">
+                        <li>
+                            <p>Hello, <span th:text="${userHeaderDto.firstName}"></span></p>
+                        </li>
+                        <li class="nav-item"><a class="button button-header" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+</header>
+<!--================ End Header Menu Area =================-->
+<section class="section-margin calc-60px">
+    <div class="container">
+        <div class="section-intro pb-60px">
+            <h2 th:text="'Search Result for '+ ${keyword}"></span></h2>
+        </div>
+        <div class="row">
+            <!-- we need to generate div as this for each product from our DB-->
+            <div th:each="product:${searchResult}" class="col-md-6 col-lg-4 col-xl-3">
+                <div class="card text-center card-product">
+                    <div class="card-product__img">
+                        <img class="card-img main-img" th:src="${'data:image/png;base64,'+product.base64Image}" alt="">
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${product.category}">Accessories</p>
+                        <h4 class="card-product__title"><a th:href="'/viewProduct/'+${product.id}"
+                                                           th:text="${product.name}"></a></h4>
+                        <p class="card-product__price" th:text="'$'+${product.currentPrice}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

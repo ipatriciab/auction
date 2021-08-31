@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Online Auction Bids Page</title>
+    <link rel="stylesheet" href="/aroma-template/vendors/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/themify-icons/themify-icons.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/linericon/style.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/nice-select/nice-select.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/owl-carousel/owl.carousel.min.css">
+
+    <link rel="stylesheet" href="/aroma-template/css/style.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+</head>
+<body>
+<!--================ Start Header Menu Area =================-->
+<header class="header_area">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand " th:href="@{/home}"><img th:src="@{images/OnlineAuction.jpg}" alt="User Icon"
+                                                                 class="logo_h"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
+
+                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+
+                        <li class="nav-item active" sec:authorize="hasRole('PARTICIPANT')"><a href="/myBids"
+                                                                                              class="nav-link">My
+                            Bids</a></li>
+
+                        <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a href="/addProduct" class="nav-link">Add
+                            Product</a></li>
+
+                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link"
+                                                                              href="/register">Register</a></li>
+
+                    </ul>
+
+                    <ul class="nav-shop" sec:authorize="isAuthenticated()">
+                        <li>
+                            <p>Hello, <span th:text="${userHeaderDto.firstName}"></span></p>
+                        </li>
+                        <li class="nav-item"><a class="button button-header" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<!--================ End Header Menu Area =================-->
+
+<section class="section-margin calc-60px">
+    <div class="container">
+        <div class="section-intro pb-60px">
+            <h2>Active <span class="section-intro__style">Bids</span></h2>
+        </div>
+        <div class="row">
+            <!-- we need to generate div as this for each product from our DB-->
+            <div th:each="product:${productActiveBiddingList}" class="col-md-6 col-lg-4 col-xl-3">
+                <div class="card text-center card-product">
+                    <div class="card-product__img">
+                        <img class="card-img main-img" th:src="${'data:image/png;base64,'+product.base64Image}" alt="">
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${product.category}">Accessories</p>
+                        <h4 class="card-product__title"><a th:href="'/viewProduct/'+${product.id}"
+                                                           th:text="${product.name}"></a></h4>
+                        <p class="card-product__price" th:text="'$'+${product.currentPrice}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-intro pb-60px">
+            <h2>Won <span class="section-intro__style">Bids</span></h2>
+        </div>
+        <div class="row">
+            <!-- we need to generate div as this for each product from our DB-->
+            <div th:each="product:${productDtoExpiredAndAssignedList}" class="col-md-6 col-lg-4 col-xl-3">
+                <div class="card text-center card-product">
+                    <div class="card-product__img">
+                        <img class="card-img main-img" th:src="${'data:image/png;base64,'+product.base64Image}" alt="">
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${product.category}">Accessories</p>
+                        <h4 class="card-product__title"><a th:href="'/viewProduct/'+${product.id}"
+                                                           th:text="${product.name}"></a></h4>
+                        <p class="card-product__price" th:text="'$'+${product.currentPrice}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+
+</html>
+

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Online Auction View Product</title>
+    <link rel="stylesheet" href="/aroma-template/vendors/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/themify-icons/themify-icons.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/linericon/style.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/nice-select/nice-select.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/aroma-template/vendors/owl-carousel/owl.carousel.min.css">
+
+    <link rel="stylesheet" href="/aroma-template/css/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/custom.css}"/>
+
+
+</head>
+<body>
+<!--================ Start Header Menu Area =================-->
+<header class="header_area">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand " th:href="@{/home}"><img th:src="@{/images/OnlineAuction.jpg}" alt="User Icon"
+                                                                 class="logo_h"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
+
+                        <li class="nav-item active"><a class="nav-link" href="/home">Home</a></li>
+
+                        <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')"><a href="/myBids" class="nav-link">My
+                            Bids</a></li>
+
+                        <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a href="/addProduct" class="nav-link">Add
+                            Product</a></li>
+
+                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link"
+                                                                              href="/register">Register</a></li>
+
+                    </ul>
+
+                    <ul class="nav-shop" sec:authorize="isAuthenticated()">
+
+                        <li>
+                            <p>Hello, <span th:text="${userHeaderDto.firstName}"></span></p>
+                        </li>
+
+                        <li class="nav-item"><a class="button button-header" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<!--================ End Header Menu Area =================-->
+<div class="product_image_area">
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-6">
+                <img class="img-fluid main-photo" th:src="${'data:image/png;base64,' + product.base64Image}" alt="">
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    <h3 th:text="${product.name}"></h3>
+                    <h2 th:text="'Current price $' + ${product.currentPrice}"></h2>
+                    <ul class="list">
+
+                        <li><a class="active" href="#">
+                            <span>Category</span>
+                            <span th:text="': '+${product.category}"></span>
+                        </a></li>
+
+                        <li><a href="#"><span>Starting price</span>
+                            <span th:text="': $'+${product.startingPrice}"></span>
+                        </a></li>
+
+                        <li><a href="#"><span>Auction ends at</span>
+                            <span th:text="': '+${product.endBiddingTime}"></span>
+                        </a></li>
+
+                        <li><a class="time-left" href="#"><span>Time left</span>
+                            <div id="clock" class="countdown pt-4"></div>
+                        </a></li>
+
+                        <li><a href="#"><span>Your maximum bid</span>
+                            <span th:text="': $'+${product.userMaximumBid}"></span>
+                        </a></li>
+
+                        <li><a href="#"><span>Minimum bid step</span>
+                            <span th:text="': $'+${product.minimumBidStep}"></span>
+                        </a></li>
+
+                    </ul>
+                    <p class="description-box" th:text="${product.description}"></p>
+
+                    <div class="product_count"
+                         th:if="${product.userMaximumBid != product.currentPrice && !product.winnerAssigned}">
+                        <form th:action="@{/viewProduct/{id}(id=${product.id})}" method="post" th:object="${bidDto}"
+                              sec:authorize="hasRole('PARTICIPANT')">
+                            <label for="qty">Your Bid value:</label>
+                            <input type="text" name="qty" id="qty" size="2" maxlength="12" class="input-text qty"
+                                   th:field="*{value}">
+                            <input class="bid-button" type="submit" value="Place Bid">
+
+                            <p class="error-message-product"
+                               th:each="error: ${#fields.errors('value')}"
+                               th:text="${error}"></p>
+                        </form>
+                    </div>
+                    <div class="product_count"
+                         th:if="${product.userMaximumBid == product.currentPrice && !product.winnerAssigned}">
+                        <p>You are currently winning the auction for this product !!!</p>
+                    </div>
+
+                    <div class="product_count" th:if="${product.winnerAssigned}">
+                        <p>The auction for this product is over !</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="/js/jquery.countdown.js"></script>
+
+<script th:inline="javascript">
+    var endDate = [[${#calendars.format(endDate,'yyyy/MM/dd hh:mm')}]];
+
+    $('#clock').countdown(endDate).on('update.countdown', function (event) {
+        var $this = $(this).html(event.strftime(''
+            + ': <span id="clockTimers" class="h1 font-weight-bold">%D</span> Day%!d'
+            + ' <span id="clockTimers" class="h1 font-weight-bold">%H</span> Hr'
+            + ' <span id="clockTimers" class="h1 font-weight-bold">%M</span> Min'
+            + ' <span id="clockTimers" class="h1 font-weight-bold">%S</span> Sec'));
+    });
+</script>
+
+</body>
+
+</html>
+

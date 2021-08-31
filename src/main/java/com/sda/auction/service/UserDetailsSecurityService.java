@@ -17,24 +17,31 @@ import java.util.Set;
 @Service
 public class UserDetailsSecurityService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    // == fields ==
+    private final UserRepository userRepository;
 
+    // == constructor ==
     @Autowired
     public UserDetailsSecurityService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    // == methods ==
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if(!optionalUser.isPresent()){
+        Optional<User> byEmail = userRepository.findByEmail(email);
+
+        if (!byEmail.isPresent()) { // if not present throw exception
             throw new UsernameNotFoundException(email);
         }
 
-        User user = optionalUser.get();
-        Set<GrantedAuthority> roles = new HashSet<>();
-        roles.add(new SimpleGrantedAuthority(user.getRole().getName()));
-        return new org.springframework.security.core.userdetails
-                .User(user.getEmail(),user.getPassword(),roles);
+        User user = byEmail.get();
+        Set<GrantedAuthority> roles = new HashSet<>(); // created a Set with GrantedAuthority
+        roles.add(new SimpleGrantedAuthority(user.getRole().getName())); // we populated the Set with the roles name;
+
+        // returns User from springframework.userdetails
+        return new org.springframework.security.core.userdetails.
+                User(user.getEmail(), user.getPassword(), roles);
     }
+
 }

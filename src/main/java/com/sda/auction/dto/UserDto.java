@@ -4,15 +4,14 @@ import lombok.Data;
 
 @Data
 public class UserDto {
-    //    DTO - DATA TRANSFER OBJECT - ma ajuta sa imi transport datele din front in back
-    // dar in baza salvam entitatea de user, nu userdto
+
+    // == fields ==
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    private String dateOfBirth;
     private Boolean isAdmin;
-
-//    lombo - pentru a nu mai folosi get/set/constructor
 
 
 }
